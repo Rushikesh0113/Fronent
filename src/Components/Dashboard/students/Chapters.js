@@ -38,7 +38,7 @@ const Chapters = () => {
               <IoIosArrowBack color='red' />
             </button>
           
-            <p>{data && data.name}</p>
+            <p>{data && data?.name}</p>
           </div>
           {role === "TEACHER" && (
             <div>
