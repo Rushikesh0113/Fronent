@@ -3,7 +3,6 @@ import Header from '../../Navbar/header';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { IoIosArrowBack } from "react-icons/io";
-import { BiSolidEdit } from "react-icons/bi";
 import Loading from '../../Loading/Loading';
 import Suggestion from './Suggestion.js';
 
@@ -31,7 +30,7 @@ const Particulartopics = () => {
           <button className='px-2' onClick={() => { navigate(-1) }}>
             <IoIosArrowBack color='red' />
           </button>
-          <h1 className="text-2xl font-bold ml-2">{data && data?.name}</h1>
+          <h1 >{data && data?.name}</h1>
         </div>
 
         {/* Main Content */}
@@ -59,7 +58,7 @@ const Particulartopics = () => {
               {/* Questions Section */}
               <div className='border-4 border-gray-100 rounded-xl p-2 mt-2'>
               <div className="mt-6">
-                <h2 className="text-xl font-semibold mb-2">Questions</h2>
+                <h2 >Questions</h2>
                 <ul className="list-disc list-inside px-4">
                   {data?.questions.map((question) => (
                     <li key={question._id}>{question.questionText}</li>
