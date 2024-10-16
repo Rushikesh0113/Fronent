@@ -18,8 +18,7 @@ const Suggestion = ({ topicId }) => {
 
   return (
     <div className="container mx-auto p-4 bg-white shadow-md rounded-lg">
-      {/* Title */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Suggestions</h1>
+      {/* Title */} 
 
       {/* Comment Editor */}
       {status && (
@@ -27,14 +26,14 @@ const Suggestion = ({ topicId }) => {
       )}
 
       {/* Toggle Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-2 pl-4">
         <button
           onClick={toggleComments}
           className={`${
             showComments ? "bg-red-500" : "bg-blue-500"
-          } text-white px-4 py-2 rounded-full transition-colors duration-300`}
+          } mt-4 px-4 py-2 bg-[#FF725E] text-white rounded-xl transition hover:delay-50 hover:scale-105"`}
         >
-          {showComments ? "Hide Comments" : "Read More"}
+          {showComments ? "Hide Suggestion" : "Read More Suggestion"}
         </button>
       </div>
 

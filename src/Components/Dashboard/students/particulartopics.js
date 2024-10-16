@@ -38,7 +38,8 @@ const Particulartopics = () => {
         {data ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Left Section: Topic Details */}
-            <div className="lg:col-span-2 bg-white p-6 shadow-md rounded-lg">
+            <div className="lg:col-span-2 bg-white p-6 shadow-md rounded-lg ">
+              <div className='border-4 border-gray-100 rounded-xl p-2'>
               <div className="mb-4">
                 <span className="font-semibold">Standard:</span> {data?.subject?.standard}
               </div>
@@ -51,10 +52,12 @@ const Particulartopics = () => {
               <div className="mb-4">
                 <span className="font-semibold">Topic Level:</span> {data?.topic_level}
               </div>
-
-              <div className="prose mb-6" dangerouslySetInnerHTML={{ __html: data?.description }}></div>
+              </div>  
+              <div className='border-4 border-gray-100 rounded-xl p-2 mt-2'>
+              <div className="prose mb-6" dangerouslySetInnerHTML={{ __html: data?.description }}></div></div>
 
               {/* Questions Section */}
+              <div className='border-4 border-gray-100 rounded-xl p-2 mt-2'>
               <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-2">Questions</h2>
                 <ul className="list-disc list-inside px-4">
@@ -64,11 +67,12 @@ const Particulartopics = () => {
                 </ul>
               </div>
             </div>
+            </div>
 
             {/* Right Section: Related Topics & Suggestions */}
-            <div className="space-y-4">
+            <div className="space-y-4 ">
               {/* Related Topics Section */}
-              <div className="bg-white p-6 shadow-md rounded-lg">
+              <div className="border-4 border-gray-100 rounded-xl p-2 mt-6 ">
                 <h2 className="text-xl font-semibold mb-2">Related Topics</h2>
                 <ul className="list-disc list-inside px-4">
                   {data?.RelatedTopic.map((topic) => (
@@ -80,10 +84,12 @@ const Particulartopics = () => {
               </div>
 
               {/* Suggestions Section */}
-              <div className="bg-white p-6 shadow-md rounded-lg">
+               <div className='border-4 border-gray-100 rounded-xl p-2 mt-2'>
+              <div className="max-h-[90vh] overflow-y-scroll">
                 <h2 className="text-xl font-semibold mb-2">Suggestions</h2>
                 <Suggestion topicId={id} />
               </div>
+            </div>
             </div>
           </div>
         ) : (
