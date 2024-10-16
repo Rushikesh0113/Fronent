@@ -37,7 +37,7 @@ const Chapters = () => {
             <button className='px-2' onClick={() => { navigate(-1) }}>
               <IoIosArrowBack color='red' />
             </button>
-            <p>Subject</p>
+            <p>{data.name}</p>
           </div>
           {role === "TEACHER" && (
             <div>
