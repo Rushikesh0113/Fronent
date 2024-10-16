@@ -31,7 +31,7 @@ const Particulartopics = () => {
           <button className='px-2' onClick={() => { navigate(-1) }}>
             <IoIosArrowBack color='red' />
           </button>
-          <h1 className="text-2xl font-bold ml-2">1.1 Introduction</h1>
+          <h1 className="text-2xl font-bold ml-2">{data && data?.name}</h1>
         </div>
 
         {/* Main Content */}
