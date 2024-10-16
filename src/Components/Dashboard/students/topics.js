@@ -35,7 +35,8 @@ const Topics = () => {
             <button className='px-2' onClick={() => navigate(-1)}>
               <IoIosArrowBack color='red' />
             </button>
-            <p>{data && data.name}</p>          </div>
+            <p>{data && data.name}</p>
+          </div>
           {role === "TEACHER" && (
             <div>
               <Link to={`/create/topic/${id}`}>
