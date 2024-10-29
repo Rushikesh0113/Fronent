@@ -7,22 +7,34 @@ import { IoStar } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 
-import texticon from "../../images/icons/icons/test (1).png"
-import homeicon from "../../images/icons/icons/home-icon-silhouette.png"
-import studyicon from "../../images/icons/icons/notebook.png"
-import commicon from "../../images/icons/icons/epidemiology.png"
-import pericon from "../../images/icons/icons/line-chart.png"
-import assicon from "../../images/icons/icons/approve.png"
-import homehovericon from "../../images/icons/icons/home (1).png"; // New hover icon
-import studyhovericon from "../../images/icons/icons/notebook (1).png"
+import texticon from "../../images/icons/icons/test (1).png";
+import homeicon from "../../images/icons/icons/home-icon-silhouette.png";
+import studyicon from "../../images/icons/icons/notebook.png";
+import commicon from "../../images/icons/icons/epidemiology.png";
+import pericon from "../../images/icons/icons/line-chart.png";
+import assicon from "../../images/icons/icons/approve.png";
+import homehovericon from "../../images/icons/icons/home (1).png";
+import studyhovericon from "../../images/icons/icons/notebook (1).png";
+import testhovericon from "../../images/icons/icons/test white.png"
+// import commhovericon from "../../images/icons/icons/epidemiology_hover.png"; // Add hover icon for community
+import perhovericon from "../../images/icons/icons/line-chart (1).png"; // Add hover icon for performance
+import asshoovericon from "../../images/icons/icons/approve (1).png"; // Add hover icon for assignment
 
 const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
   const data = useSelector((store) => store.user.data);
-  const [isTestDropdownOpen, setTestDropdownOpen] = useState(false)
+  const [isTestDropdownOpen, setTestDropdownOpen] = useState(false);
   const toggleTestDropdown = () => {
-    setTestDropdownOpen(!isTestDropdownOpen)
-  }
-  const [isHovered, setIsHovered] = useState(false);
+    setTestDropdownOpen(!isTestDropdownOpen);
+  };
+
+  // Hover states for each menu item
+  const [isHoveredHome, setIsHoveredHome] = useState(false);
+  const [isHoveredStudy, setIsHoveredStudy] = useState(false);
+  const [isHoveredTest, setIsHoveredTest] = useState(false);
+  const [isHoveredAssignment, setIsHoveredAssignment] = useState(false);
+  const [isHoveredPerformance, setIsHoveredPerformance] = useState(false);
+  const [isHoveredCommunity, setIsHoveredCommunity] = useState(false);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -123,32 +135,29 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
         </div>
         <div className="flex flex-col p-4 space-y-2 ">
 
+          {/* Home */}
           <Link
             to={`/${data?.role}/dashboard`}
             className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => setIsHoveredHome(true)}
+            onMouseLeave={() => setIsHoveredHome(false)}
           >
-            <img src={isHovered ? homehovericon : homeicon} width={30} height={10} alt="Home icon" />
-
-            {/* The text color is initially orange and changes to white on hover */}
+            <img src={isHoveredHome ? homehovericon : homeicon} width={30} height={10} alt="Home icon" />
             <span className="text-lg font-medium">Home</span>
           </Link>
 
+          {/* Study Material */}
           {data?.role !== "PARENT" && (
             <Link
               to={`/${data?.role}/studymaterial`}
               className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+              onMouseEnter={() => setIsHoveredStudy(true)}
+              onMouseLeave={() => setIsHoveredStudy(false)}
             >
-              <img src={isHovered ? studyhovericon : studyicon} width={30} height={10} alt="Study Material icon" />
-
-              {/* The text color is initially orange and changes to white on hover */}
+              <img src={isHoveredStudy ? studyhovericon : studyicon} width={30} height={10} alt="Study Material icon" />
               <span className="text-lg font-medium">Study Material</span>
             </Link>
           )}
-
           {(data?.role === "STUDENT" || data?.role === "TEACHER") && (
             <div className="relative hover:text-white">
               <button
@@ -172,13 +181,13 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
                   {data?.role === "STUDENT" && (
                     <>
                       <Link
-                        to={`/${data?.role}/test`}
+                        to={`${data?.role}/test`}
                         className="text-lg font-medium block px-4 py-2 text-[#FF725E] hover:bg-[#FF725E] hover:text-white"
                       >
                         MCQ Test
                       </Link>
                       <Link
-                        to={`/${data?.role}/physical-test`}
+                        to={`${data?.role}/physical-test`}
                         className="text-lg font-medium block px-4 py-2 text-[#FF725E] hover:bg-[#FF725E] hover:text-white"
                       >
                         Physical Test
@@ -187,7 +196,7 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
                   )}
                   {data?.role === "TEACHER" && (
                     <Link
-                      to={`/${data?.role}/check/ptest`}
+                      to={`${data?.role}/check/ptest`}
                       className="text-lg font-medium block px-4 py-2 text-gray-800 hover:bg-[#FF725E] hover:text-white"
                     >
                       Physical Test Check
@@ -197,43 +206,44 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
               )}
             </div>
           )}
+          {/* Assignment */}
           {data?.role === "STUDENT" && (
             <Link
               to={`/${data?.role}/assignment`}
               className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
+              onMouseEnter={() => setIsHoveredAssignment(true)}
+              onMouseLeave={() => setIsHoveredAssignment(false)}
             >
-              <img src={assicon} width={30} height={10} alt="Home icon" />
-
-              {/* The text color is initially orange and changes to white on hover */}
+              <img src={isHoveredAssignment ? asshoovericon : assicon} width={30} height={10} alt="Assignment icon" />
               <span className="text-lg font-medium">Assignment</span>
             </Link>
           )}
-          <div className="hover:text-white">
 
-            {data?.role !== "TEACHER" && (
-              <Link
-                to={`/${data?.role}/performance`}
-                className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
-              >
-                <img src={pericon} width={30} height={10} alt="Home icon" />
+          {/* Performance */}
+          {data?.role !== "TEACHER" && (
+            <Link
+              to={`/${data?.role}/performance`}
+              className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
+              onMouseEnter={() => setIsHoveredPerformance(true)}
+              onMouseLeave={() => setIsHoveredPerformance(false)}
+            >
+              <img src={isHoveredPerformance ? perhovericon : pericon} width={30} height={10} alt="Performance icon" />
+              <span className="text-lg font-medium">Performance</span>
+            </Link>
+          )}
 
-                {/* The text color is initially orange and changes to white on hover */}
-                <span className="text-lg font-medium">Performance</span>
-              </Link>
-            )}
-            {data?.role === "STUDENT" && (
-              <Link
-                to={`/${data?.role}/community`}
-                className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
-              >
-                <img src={commicon} width={30} height={10} alt="Home icon" />
-
-                {/* The text color is initially orange and changes to white on hover */}
-                <span className="text-lg font-medium">Community</span>
-              </Link>
-            )}
-          </div>
-
+          {/* Community */}
+          {data?.role === "STUDENT" && (
+            <Link
+              to={`/${data?.role}/community`}
+              className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
+              onMouseEnter={() => setIsHoveredCommunity(true)}
+              onMouseLeave={() => setIsHoveredCommunity(false)}
+            >
+              <img src={isHoveredCommunity ? asshoovericon : commicon} width={30} height={10} alt="Community icon" />
+              <span className="text-lg font-medium">Community</span>
+            </Link>
+          )}
         </div>
       </div>
     </>
