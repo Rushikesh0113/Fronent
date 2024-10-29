@@ -59,7 +59,7 @@ export const Chaptertest = () => {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-fit p-2 bg-[#fa7e72] text-white rounded-lg focus:outline-none"
+                  className="w-fit p-2 bg-[white] text- black rounded-lg focus:outline-none"
                 >
                   <option value="All">STATUS</option>
                   {statusOptions.map((status) => (
@@ -72,7 +72,7 @@ export const Chaptertest = () => {
                 <select
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="w-full p-2 bg-[#fa7e72] text-white rounded-lg focus:outline-none"
+                  className="w-full p-2 bg-[white] text-black rounded-lg focus:outline-none"
                 >
                   <option value="All">SUBJECT</option>
                   {subjectOptions.map((subject) => (
