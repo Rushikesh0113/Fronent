@@ -181,7 +181,7 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
                   {data?.role === "STUDENT" && (
                     <>
                       <Link
-                        to={`${data?.role}/test`}
+                        to={`/student/test`}
                         className="text-lg font-medium block px-4 py-2 text-[#FF725E] hover:bg-[#FF725E] hover:text-white"
                       >
                         MCQ Test
