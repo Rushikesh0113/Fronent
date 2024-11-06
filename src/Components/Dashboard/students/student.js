@@ -84,9 +84,6 @@ const Student = () => {
         </div>
         <div className='flex justify-center pt-6 border rounded-xl shadow-xl'>
           <h2 className=" mr-10 pl-8 text-2xl font-bold text-gray-800">Schedule Planner</h2>
-
-
-
           <div className='rounded-xl p-4 shadow-xl'>
           <Calender
             preselectedDates={[
