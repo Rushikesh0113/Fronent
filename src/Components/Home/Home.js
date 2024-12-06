@@ -11,12 +11,12 @@ const Home = () => {
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <Link to={"/"} className="flex items-center space-x-3 rtl:space-x-reverse">
    
-        <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">ProLearning</span>
+        <span className="self-center text-3xl font-bold whitespace-nowrap text-white">ProLearning</span>
     </Link>
     <div>
-{  data ?(  <Link to={`/${role}/dashboard`}><button className="border-2 border-black w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">Dashboard</button></Link> )
- : (<div> <Link to={'/login'}><button className="border-2 border-black w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">Login</button></Link> 
-     <Link to={'/signup'}> <button className="border-2 border-black w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">Sign Up</button></Link></div>)  }
+{  data ?(  <Link to={`/${role}/dashboard`}><button className="border-4 border-white w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">Dashboard</button></Link> )
+ : (<div> <Link to={'/login'}><button className="border-4 border-white w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">LOG IN</button></Link> 
+     <Link to={'/signup'}> <button className="border-4 border-white w-fit font-medium bg-[#FF725E] rounded-md p-2 hover:bg-[#f1bb87] transition-all hover:rounded-3xl text-white">SIGN IN</button></Link></div>)  }
     </div>
   </div>
 </nav>

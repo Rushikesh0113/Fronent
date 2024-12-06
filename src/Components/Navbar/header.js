@@ -6,19 +6,19 @@ import { useSelector } from "react-redux";
 import { IoStar } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
-
-import texticon from "../../images/icons/icons/test (1).png";
+import { FaAngleRight } from "react-icons/fa";
+import texticon from "../../images/icons/icons/test(1).png";
 import homeicon from "../../images/icons/icons/home-icon-silhouette.png";
 import studyicon from "../../images/icons/icons/notebook.png";
-import commicon from "../../images/icons/icons/epidemiology.png";
+import commicon from "../../images/icons/icons/community.png";
 import pericon from "../../images/icons/icons/line-chart.png";
 import assicon from "../../images/icons/icons/approve.png";
 import homehovericon from "../../images/icons/icons/home (1).png";
 import studyhovericon from "../../images/icons/icons/notebook (1).png";
 import testhovericon from "../../images/icons/icons/test white.png"
-// import commhovericon from "../../images/icons/icons/epidemiology_hover.png"; // Add hover icon for community
+import commhovericon from "../../images/icons/icons/community (1).png"; // Add hover icon for community
 import perhovericon from "../../images/icons/icons/line-chart (1).png"; // Add hover icon for performance
-import asshoovericon from "../../images/icons/icons/approve (1).png"; // Add hover icon for assignment
+import asshoovericon from "../../images/icons/icons/assignment (1).png"; // Add hover icon for assignment
 
 const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
   const data = useSelector((store) => store.user.data);
@@ -149,7 +149,7 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
           {/* Study Material */}
           {data?.role !== "PARENT" && (
             <Link
-              to={`/${data?.role}/studymaterial`}
+              to={`/studymaterial`}
               className="flex items-center gap-2 p-2 rounded-md transition-colors bg-white hover:bg-[#FF725E] text-[#FF725E] hover:text-white"
               onMouseEnter={() => setIsHoveredStudy(true)}
               onMouseLeave={() => setIsHoveredStudy(false)}
@@ -163,16 +163,21 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
               <button
                 className="flex justify-between gap-2 p-2 w-full text-left rounded-md hover:bg-[#FF725E] transition-colors group"
                 onClick={toggleTestDropdown}
+                onMouseEnter={() => setIsHoveredTest(true)}
+                onMouseLeave={() => setIsHoveredTest(false)}
               >
                 <div className="flex flex-row items-center">
-                  <img src={texticon} alt="Test icon" color="red" width={30} height={10} />
+                  <img src={!isHoveredTest ? texticon : testhovericon} alt="Test icon" width={30} height={10} />
                   {/* Initially orange, will change to white on hover (using group-hover) */}
                   <span className="text-lg text-[#FF725E] px-2 font-medium group-hover:text-white">
                     Test
                   </span>
                 </div>
-                <div className="py-2">
-                  <FaAngleDown size={16} className="group-hover:text-white" />
+                <div className="py-2 group">
+                  <FaAngleRight
+                    size={16}
+                    className="text-[#FF725E] group-hover:text-white transition-colors"
+                  />
                 </div>
               </button>
 
@@ -240,7 +245,7 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
               onMouseEnter={() => setIsHoveredCommunity(true)}
               onMouseLeave={() => setIsHoveredCommunity(false)}
             >
-              <img src={isHoveredCommunity ? asshoovericon : commicon} width={30} height={10} alt="Community icon" />
+              <img src={isHoveredCommunity ? commhovericon : commicon} width={30} height={10} alt="Community icon" />
               <span className="text-lg font-medium">Community</span>
             </Link>
           )}

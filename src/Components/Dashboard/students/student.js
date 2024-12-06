@@ -31,10 +31,10 @@ const Student = () => {
       <Header isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} />
       <Subjects />
 
-      <div>
-        <span className='m-8 font-bold text-xl'>Upcoming Test</span>
+      <div className='mt-8'>
+        <span className='m-5 font-bold text-lg'>Upcoming Test</span>
 
-        <div className='flex flex-row rounded-xl p-2 ml-6 mt-2'>
+        <div className='flex flex-row rounded-xl p-2 ml-2 mt-2'>
           <div className='bg-[#FFE6E2] w-[234px] h-[70px] p-1 m-1 rounded-xl'>
             <div className='flex flex-row ml-2 justify-between'>
               <div className='flex flex-col'>

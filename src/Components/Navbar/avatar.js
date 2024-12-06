@@ -25,10 +25,11 @@ const Avatar = () => {
 <div> <div className='flex flex-row'>
 
 <div className='flex flex-row' onClick={()=>{setcheck(!check)}}>
-<div   className="z-50   inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-[#3DB4F6] rounded-full dark:bg-blue-600">
-                <span className="font-medium text-white dark:text-gray-300">{initials}</span>
+<div   className="z-50   inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-[#3DB4F6] rounded-full dark:bg-blue-600">
+                <span className="font-medium text-2xl text-white dark:text-gray-300">{initials}</span>
               </div>
-              <RiArrowDropDownLine size={40}/>
+              <div className='mt-1'><RiArrowDropDownLine size={38}/></div>
+              
 
 </div>
 </div></div>
