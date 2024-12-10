@@ -15,6 +15,7 @@ const Physicaltestupload = () => {
   const [pdffile, setpdffile] = useState('');
   const stdid = useSelector((store) => store.user.data._id);
   const [err, seterr] = useState('');
+  const [recentFiles, setRecentFiles] = useState([]);
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
@@ -33,6 +34,17 @@ const Physicaltestupload = () => {
     });
 
     doc.save(`${data.name}_Test_Paper.pdf`);
+  };
+
+  const fetchRecentFiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/physicaltest/recent-files`
+      );
+      setRecentFiles(response.data.files);
+    } catch (error) {
+      console.error('Error fetching recent files:', error);
+    }
   };
 
   useEffect(() => {
@@ -89,14 +101,21 @@ const Physicaltestupload = () => {
       <Header />
       {/* Navigation and Test Info */}
       <div className="m-2 font-semibold text-xl flex flex-row">
-        <button className='pl-48 pr-12' onClick={() => { navigate(-1) }}>
+        <button className="pl-48 pr-12" onClick={() => navigate(-1)}>
           <IoIosArrowBack />
         </button>
-        <div className=' flex flex-row bg-gray-100 rounded-xl place-content-center' style={{ width: "860px", alignItems: "center", justifyContent: "space-between" }}>
-          <p className='text-slate-500 text-lg font-semibold'>TEST NAME</p>
-          <div className='flex flex-row '>
-            <p className='text-slate-500 text-lg font-semibold'>DUE DATE</p>
-            <button className='p-2'>
+        <div
+          className="flex flex-row bg-gray-100 rounded-xl place-content-center"
+          style={{
+            width: '860px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <p className="text-slate-500 text-lg font-semibold">TEST NAME</p>
+          <div className="flex flex-row">
+            <p className="text-slate-500 text-lg font-semibold">DUE DATE</p>
+            <button className="p-2">
               <IoMdMore style={{ fontWeight: 'bold' }} />
             </button>
           </div>
@@ -104,76 +123,105 @@ const Physicaltestupload = () => {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg mt-8 p-6">
-        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
+      <div className="max-w-auto mx-auto bg-white rounded-xl mt-8 p-6 grid grid-cols-2 gap-6">
+        {/* Questions Column */}
+        <div className="pr-6">
+          {/* Align the heading with the list */}
+          <div className="pb-4">
+            <p className="font-semibold text-lg">LIST OF QUESTIONS</p>
+          </div>
+          <ul className="pl-2"> {/* Add padding to align with heading */}
+            {data.questions &&
+              data.questions.map((item, index) => (
+                <li
+                  key={index}
+                  className={`flex justify-between items-center rounded-xl py-4 px-4 ${index % 2 === 0
+                    ? 'bg-white border border-sky-200'
+                    : 'bg-gray-100'
+                    }`}
+                >
+                  <span className="text-gray-700 text-sm font-medium">
+                    {index + 1}. {item.question}
+                  </span>
+                  <span className="text-gray-500 text-sm">{item.score} Marks</span>
+                </li>
+              ))}
+          </ul>
+        </div>
 
-          {/* Questions Section */}
-<div className="flex-1">
-  <div className="pb-4">
-    <p className="font-bold text-lg">LIST OF QUESTIONS</p>
-  </div>
-  <ul className="mt-4">
-    {data.questions &&
-      data.questions.map((item, index) => (
-        <li
-          key={index}
-          className={`flex justify-between items-center rounded-md py-4 px-4 ${
-            index % 2 === 0 ? "bg-white border border-sky-200" : "bg-gray-100"
-          }`}
-        >
-          <span className="text-gray-700 text-sm font-medium">
-            {index + 1}. {item.question}
-          </span>
-          <span className="text-gray-500 text-sm">{item.score} Marks</span>
-        </li>
-      ))}
-  </ul>
-</div>
 
-          {/* Upload Section */}
-          <div className="w-full md:w-1/3">
-            <p className="font-bold text-lg mb-4">UPLOAD ANSWER SHEET</p>
-            <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg">
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => setpdffile(e.target.files[0])}
-                className="block w-full text-sm text-gray-500"
-              />
+        {/* Upload and Actions Section */}
+        <div className="pl-6 mt-16 flex flex-col gap-4">
+          <div className="bg-gray-100 p-2 rounded-lg shadow-md">
+            <div className="flex flex-row items-center gap-8">
+              <button
+                onClick={() => document.getElementById('file-input').click()}
+                className="bg-orange-500 text-white px-2 text-sm py-2 rounded-lg shadow-sm hover:shadow-xl"
+              >
+                New Upload
+              </button>
+              <button
+                onClick={fetchRecentFiles}
+                className="bg-white text-orange-500 px-2 text-sm py-2 rounded-lg shadow-sm hover:shadow-xl border border-white"
+              >
+                Recent
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Buttons */}
-        <div className="flex items-center justify-between mt-8">
-          <button
-            onClick={submittest}
-            className="bg-orange-500 text-white px-6 py-2 rounded-lg"
-          >
-            Submit Test
-          </button>
-          <button
-            onClick={handleDownloadPDF}
-            className="bg-gray-100 px-6 py-2 rounded-lg border"
-          >
-            Download Test Paper
-          </button>
+          {/* Recent Files Section */}
+          {recentFiles.length > 0 && (
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <h3 className="font-bold text-lg mb-4">Recent Uploads</h3>
+              <ul className="space-y-2">
+                {recentFiles.map((file, index) => (
+                  <li
+                    key={index}
+                    className="flex justify-between items-center border px-4 py-2 rounded-lg"
+                  >
+                    <span>{file.name}</span>
+                    <a
+                      href={file.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      View
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* File Upload Section */}
+          <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg">
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setpdffile(e.target.files[0])}
+              className="block w-full text-sm text-gray-500"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={submittest}
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out"
+            >
+              Submit Test
+            </button>
+          </div>
+
+          {/* Error Message */}
+          {err && (
+            <div className="text-red-500 text-center mt-4 font-medium">
+              {err}
+            </div>
+          )}
         </div>
-        {err && <p className="text-red-500 mt-4">{err}</p>}
       </div>
-
-      {/* Already Submitted Section
-      {res && (
-        <div className="max-w-5xl mx-auto bg-gray-50 shadow-md mt-8 p-6 rounded-lg">
-          <h2 className="text-lg font-bold mb-2">Already Submitted</h2>
-          <Link
-            to={`/student/ptest/result/${res?._id}`}
-            className="text-blue-600 underline"
-          >
-            Check The Result
-          </Link>
-        </div> */}
-      )}
     </>
   );
 };
