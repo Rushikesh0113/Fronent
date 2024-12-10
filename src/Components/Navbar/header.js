@@ -192,7 +192,7 @@ const Header = ({ isSideNavOpen, setIsSideNavOpen }) => {
                         MCQ Test
                       </Link>
                       <Link
-                        to={`${data?.role}/physical-test`}
+                        to={`/student/physical-test`}
                         className="text-lg font-medium block px-4 py-2 text-[#FF725E] hover:bg-[#FF725E] hover:text-white"
                       >
                         Physical Test

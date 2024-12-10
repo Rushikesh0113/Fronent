@@ -88,7 +88,7 @@ export const Stdtest = () => {
         />
         <div className="p-4">
           {/* Header Section */}
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify items-center mb-4">
             <div className="font-semibold text-xl flex items-center">
               <button className="px-2" onClick={() => navigate(-1)}>
                 <IoIosArrowBack color="red" />
@@ -98,7 +98,7 @@ export const Stdtest = () => {
             <div className="flex gap-2">
               <select
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
-                className="bg-red-300 text-white px-3 py-1 rounded-md"
+                className="bg-red-400 text-white px-3 py-1 rounded-md"
               >
                 <option value="All">Status</option>
                 <option value="submitted">Submitted</option>
@@ -107,7 +107,7 @@ export const Stdtest = () => {
               </select>
               <select
                 onChange={(e) => handleSubjectFilterChange(e.target.value)}
-                className="bg-red-300 text-white px-3 py-1 rounded-md"
+                className="bg-red-400 text-white px-3 py-1 rounded-md"
               >
                 <option value="All">Subject</option>
                 {subjects &&
