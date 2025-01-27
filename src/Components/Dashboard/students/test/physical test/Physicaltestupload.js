@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoMdMore } from "react-icons/io";
 import { jsPDF } from "jspdf";
+import Toast from './Toast';  // Import the Toast component
 
 const Physicaltestupload = () => {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ const Physicaltestupload = () => {
   const stdid = useSelector((store) => store.user.data._id);
 
   const [data, setData] = useState({});
-  const [res, setResData] = useState({});
   const [files, setFiles] = useState([]);
   const [err, setErr] = useState("");
+  const [toastMessage, setToastMessage] = useState("");  // State for the Toast message
+  const [showToast, setShowToast] = useState(false);    // State to control toast visibility
 
   useEffect(() => {
     async function fetchTestData() {
@@ -25,11 +27,6 @@ const Physicaltestupload = () => {
           `${process.env.REACT_APP_API_URL}/api/physicaltest/physical-tests/${id}`
         );
         setData(testResponse.data.data);
-
-        const resResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/physicaltest/already_check/${id}`
-        );
-        setResData(resResponse.data.data);
       } catch (error) {
         console.error("Error fetching test data:", error);
       }
@@ -47,9 +44,10 @@ const Physicaltestupload = () => {
   };
 
   const submittest = () => {
-    if (!files.length) {
-      setErr("At least one PDF file is required to submit the test.");
-      setTimeout(() => setErr(""), 3000);
+    if (files.length === 0) {
+      setToastMessage("No files uploaded yet.");  // Set the message for Toast
+      setShowToast(true);  // Show the toast
+      setTimeout(() => setShowToast(false), 3000);  // Hide the toast after 3 seconds
       return;
     }
 
@@ -66,32 +64,14 @@ const Physicaltestupload = () => {
         formData
       )
       .then(() => {
-        setErr("Successfully Submitted Test");
-        setTimeout(() => navigate("/student/physical-test"), 3000);
+        setToastMessage("Successfully Submitted Test");  // Set the success message for Toast
+        setShowToast(true);  // Show the toast
+        setTimeout(() => navigate("/student/physical-test"), 3000);  // Redirect after 3 seconds
       })
       .catch((error) => {
         console.error("Error submitting test:", error);
         setErr("An error occurred while submitting the test.");
       });
-  };
-
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text(`${data.name || "Test"} - Test Paper`, 20, 20);
-    doc.setFontSize(12);
-    doc.text(`Teacher: ${data.teacher?.fullName || "N/A"}`, 20, 30);
-    doc.text(`Subject: ${data.subject || "N/A"}`, 20, 40);
-    doc.text(`Grade: ${data.standard || "N/A"}`, 20, 50);
-    doc.text(`Total Marks: ${data.score || "N/A"}`, 20, 60);
-    doc.line(10, 70, 200, 70);
-
-    data.questions?.forEach((item, index) => {
-      doc.text(`Q${index + 1}: ${item.question}`, 20, 80 + index * 10);
-      doc.text(`Marks: ${item.score}`, 180, 80 + index * 10);
-    });
-
-    doc.save(`${data.name || "Test"}_Test_Paper.pdf`);
   };
 
   return (
@@ -130,11 +110,10 @@ const Physicaltestupload = () => {
             {data.questions?.map((item, index) => (
               <li
                 key={index}
-                className={`flex justify-between items-center rounded-xl py-4 px-4 ${
-                  index % 2 === 0
+                className={`flex justify-between items-center rounded-xl py-4 px-4 ${index % 2 === 0
                     ? "bg-white border border-sky-200"
                     : "bg-gray-100"
-                }`}
+                  }`}
               >
                 <span className="text-gray-700 text-sm font-medium">
                   {index + 1}. {item.question}
@@ -175,7 +154,7 @@ const Physicaltestupload = () => {
                       </span>
                       <button
                         onClick={() => handleFileDelete(index)}
-                        className="bg-red-500 text-white px-2 py-1 text-xs rounded-md hover:bg-red-600"
+                        className="bg-orange-500 text-white px-2 py-1 text-xs rounded-md hover:bg-red-600"
                       >
                         Delete
                       </button>
@@ -191,7 +170,7 @@ const Physicaltestupload = () => {
           <div className="flex justify-center mt-6">
             <button
               onClick={submittest}
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out"
+              className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out"
             >
               Submit Test
             </button>
@@ -204,6 +183,10 @@ const Physicaltestupload = () => {
           )}
         </div>
       </div>
+
+      {showToast && (
+        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
+      )}
     </>
   );
 };

@@ -1,0 +1,56 @@
+/* Toast container (positioning it to display on top of other content) */
+.toast-container {
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;  /* Make sure it is on top */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Style for the toast itself */
+  .toast {
+    background-color: #4CAF50;  /* Green background */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    text-align: center;
+    animation: toastFadeInOut 3s ease-in-out forwards;  /* Add animation */
+  }
+  
+  /* Animation for fade-in and fade-out effect */
+  @keyframes toastFadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    20% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    80% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+  
+  .toast.bg-red-500 {
+    background-color: #f56565; /* Red background */
+  }
+  
+  .toast.bg-green-500 {
+    background-color: #48bb78; /* Green background */
+  }
+  
+  .toast.text-white {
+    color: white; /* White text */
+  }
