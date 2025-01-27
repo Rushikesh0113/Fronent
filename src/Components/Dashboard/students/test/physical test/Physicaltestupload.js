@@ -13,7 +13,7 @@ const Physicaltestupload = () => {
   const { id } = useParams();
   const stdid = useSelector((store) => store.user.data._id);
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState({})
   const [files, setFiles] = useState([]);
   const [err, setErr] = useState("");
   const [toastMessage, setToastMessage] = useState("");  // State for the Toast message
