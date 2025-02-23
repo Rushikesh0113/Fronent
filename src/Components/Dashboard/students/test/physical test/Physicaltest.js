@@ -10,8 +10,8 @@ import { format } from 'date-fns';
 
 export const Physicaltest = () => {
   const navigate = useNavigate();
-
   const data = useSelector(store => store.user.data);
+  const role = data?.role; // Get user role
   const Id = parseInt(data.standard);
   const [subjects, setSubjects] = useState([]);
   const [subjectFilter, setSubjectFilter] = useState('All');
@@ -39,6 +39,21 @@ export const Physicaltest = () => {
 
     fetchSubjects();
   }, [Id]);
+
+  // Redirect to Dashboard based on role
+  const navigateToDashboard = () => {
+    let dashboardURL = "/";
+
+    if (role === "Teacher") {
+      dashboardURL = "http://localhost:8000/TEACHER/dashboard";
+    } else if (role === "Student") {
+      dashboardURL = "http://localhost:8000/STUDENT/dashboard";
+    } else if (role === "Parent") {
+      dashboardURL = "http://localhost:8000/PARENT/dashboard";
+    }
+
+    navigate(dashboardURL, { replace: true }); // Redirect
+  };
 
   // Fetch tests and apply filters
   useEffect(() => {
@@ -76,18 +91,6 @@ export const Physicaltest = () => {
     }
   }, [statusFilter, test]);
 
-  // Handle subject filter change
-  const handleSubjectFilterChange = (subject) => {
-    setSubjectFilter(subject);
-  };
-
-  // Handle status filter change
-  const handleStatusFilterChange = (status) => {
-    setStatusFilter(status);
-  };
-  
-  
-
   return (
     <>
       <div className={`${isSideNavOpen ? 'sm:ml-64' : ''}`}>
@@ -95,36 +98,36 @@ export const Physicaltest = () => {
         <div className='p-2'>
           <div className='flex flex-row justify'>
             <div className="m-2 font-semibold text-xl flex flex-row">
-              <button className='px-2' onClick={() => { navigate(-1) }}>
+              <button className='px-2' onClick={navigateToDashboard}>
                 <IoIosArrowBack color='red' />
               </button>
-              <p>TEST DETAILS (MCQ)</p>
+              <p>TEST DETAILS</p>
             </div>
 
             <div className='flex flex-row justify-between items-center'>
               <div className="flex gap-2">
                 <select
-                  onChange={(e) => handleStatusFilterChange(e.target.value)}
+                  onChange={(e) => setStatusFilter(e.target.value)}
                   className="text-black px-3 py-1 rounded-md appearance-none focus:outline-none group"
                 >
-                  <option value="All" className='group-hover:bg-orange-500 group-hover:text-white'>Status</option>
-                  <option value="submitted" className='group-hover:bg-orange-500 group-hover:text-white'>Submitted</option>
-                  <option value="not submitted" className='group-hover:bg-orange-500 group-hover:text-white'>Not Submitted</option>
-                  <option value="delayed" className='group-hover:bg-orange-500 group-hover:text-white'>Delayed</option>
+                  <option value="All">Status</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="not submitted">Not Submitted</option>
+                  <option value="delayed">Delayed</option>
                 </select>
 
                 <select
-                  onChange={(e) => handleSubjectFilterChange(e.target.value)}
+                  onChange={(e) => setSubjectFilter(e.target.value)}
                   className="text-black px-3 py-1 rounded-md appearance-none focus:outline-none group"
                   disabled={loadingSubjects}
                 >
                   {loadingSubjects ? (
-                    <option className='hover:bg-orange-500 hover:text-white'>Loading...</option>
+                    <option>Loading...</option>
                   ) : (
                     <>
-                      <option value="All" className='group-hover:bg-orange-500 group-hover:text-white'>Subject</option>
+                      <option value="All">Subject</option>
                       {subjects.map((sub, index) => (
-                        <option key={index} value={sub.name} className='group-hover:bg-orange-500 group-hover:text-white'>
+                        <option key={index} value={sub.name}>
                           {sub.name}
                         </option>
                       ))}
@@ -135,11 +138,8 @@ export const Physicaltest = () => {
             </div>
           </div>
 
-
           {/* Error message */}
-          {error && (
-            <p className="text-center text-red-500 py-6">{error}</p>
-          )}
+          {error && <p className="text-center text-red-500 py-6">{error}</p>}
 
           {/* Table for displaying tests */}
           {filteredTests ? (
@@ -148,61 +148,32 @@ export const Physicaltest = () => {
                 <table className="min-w-full divide-y divide-gray-200 border">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        SR No.
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Test Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Subject
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Total Marks
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Time Duration
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Due Date
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SR No.</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Test Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Marks</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time Duration</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredTests.map((data, index) => (
                       <tr key={data._id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {index + 1}
-                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link to={`/student/physical-test/${data._id}`} className="text-blue-600 hover:underline">
                             {data?.name}
                           </Link>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {data?.subjectName}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {data?.totalMarks}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {data?.timeDuration}
-                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">{data?.subjectName}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{data?.totalMarks}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{data?.timeDuration}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {data?.dueDate ? format(new Date(data.dueDate), 'dd/MM/yyyy') : 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`px-2 py-1 rounded-full text-sm font-medium ${data.status === 'Submitted'
-                                ? 'text-green-300'
-                                : data.status === 'Delayed'
-                                  ? 'text-red-300'
-                                  : 'text-yellow-300'
-                              }`}
-                          >
+                          <span className={`px-2 py-1 rounded-full text-sm font-medium ${data.status === 'Submitted' ? 'text-green-500' : data.status === 'Delayed' ? 'text-red-500' : 'text-yellow-500'}`}>
                             {data.status || 'Not Submitted'}
                           </span>
                         </td>
@@ -211,12 +182,8 @@ export const Physicaltest = () => {
                   </tbody>
                 </table>
               </div>
-            ) : (
-              <p className="text-center text-gray-500 py-6">No tests available for the selected filters.</p>
-            )
-          ) : (
-            <Loading />
-          )}
+            ) : <p className="text-center text-gray-500 py-6">No tests available.</p>
+          ) : <Loading />}
         </div>
       </div>
     </>

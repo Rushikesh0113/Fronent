@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../../../Navbar/header";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useBlocker } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoMdMore } from "react-icons/io";
-import { jsPDF } from "jspdf";
-import Toast from './Toast';  // Import the Toast component
+import Toast from './Toast';
 
 const Physicaltestupload = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const stdid = useSelector((store) => store.user.data._id);
 
-  const [data, setData] = useState({})
+  const [data, setData] = useState({});
   const [files, setFiles] = useState([]);
   const [err, setErr] = useState("");
-  const [toastMessage, setToastMessage] = useState("");  // State for the Toast message
-  const [showToast, setShowToast] = useState(false);    // State to control toast visibility
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // Track upload state
+
+  // Block navigation if files are uploaded but not submitted
+  const blocker = useBlocker(() => files.length > 0 && !isUploading);
 
   useEffect(() => {
     async function fetchTestData() {
@@ -34,6 +37,20 @@ const Physicaltestupload = () => {
     fetchTestData();
   }, [id]);
 
+  // Warn before leaving the page if files are uploaded
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (files.length > 0 && !isUploading) {
+        event.preventDefault();
+        event.returnValue = "Are you sure you want to leave? Your uploaded files will be lost!";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [files, isUploading]);
+
   const handleFileChange = (e) => {
     const uploadedFiles = Array.from(e.target.files);
     setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
@@ -43,13 +60,25 @@ const Physicaltestupload = () => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const handleBack = () => {
+    const confirmLeave = window.confirm(
+      "Are you sure you want to leave? Any unsaved progress will be lost!"
+    );
+    if (confirmLeave) {
+      navigate(-1);
+    }
+  };
+  
+
   const submittest = () => {
     if (files.length === 0) {
-      setToastMessage("No files uploaded yet.");  // Set the message for Toast
-      setShowToast(true);  // Show the toast
-      setTimeout(() => setShowToast(false), 3000);  // Hide the toast after 3 seconds
+      setToastMessage("No files uploaded yet.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
       return;
     }
+
+    setIsUploading(true); // Set uploading state
 
     const formData = new FormData();
     formData.append("studentId", stdid);
@@ -64,21 +93,22 @@ const Physicaltestupload = () => {
         formData
       )
       .then(() => {
-        setToastMessage("Successfully Submitted Test");  // Set the success message for Toast
-        setShowToast(true);  // Show the toast
-        setTimeout(() => navigate("/student/physical-test"), 3000);  // Redirect after 3 seconds
+        setToastMessage("Successfully Submitted Test");
+        setShowToast(true);
+        setTimeout(() => navigate("/student/physical-test"), 3000);
       })
       .catch((error) => {
         console.error("Error submitting test:", error);
         setErr("An error occurred while submitting the test.");
-      });
+      })
+      .finally(() => setIsUploading(false)); // Reset uploading state
   };
 
   return (
     <>
       <Header />
       <div className="m-2 font-semibold text-xl flex flex-row">
-        <button className="pl-48 pr-12" onClick={() => navigate(-1)}>
+        <button className="pl-48 pr-12" onClick={handleBack}>
           <IoIosArrowBack />
         </button>
         <div
@@ -140,7 +170,6 @@ const Physicaltestupload = () => {
               <p className="text-gray-500 text-center">Click here to upload files</p>
             </div>
 
-            {/* Display Uploaded Files Inside Dotted Box */}
             <div className="mt-4">
               {files.length > 0 ? (
                 <ul className="space-y-2">
@@ -171,22 +200,17 @@ const Physicaltestupload = () => {
             <button
               onClick={submittest}
               className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out"
+              disabled={isUploading}
             >
-              Submit Test
+              {isUploading ? "Submitting..." : "Submit Test"}
             </button>
           </div>
 
-          {err && (
-            <div className="text-red-500 text-center mt-4 font-medium">
-              {err}
-            </div>
-          )}
+          {err && <div className="text-red-500 text-center mt-4 font-medium">{err}</div>}
         </div>
       </div>
 
-      {showToast && (
-        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
-      )}
+      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
     </>
   );
 };
